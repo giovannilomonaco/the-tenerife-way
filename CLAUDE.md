@@ -48,3 +48,9 @@ All logic is self-contained in each HTML file (inline `<style>` and `<script>`).
 ```
 
 Fonts: Playfair Display (headings), Inter (body) — loaded from Google Fonts.
+
+## Deployment
+
+Hosted on Vercel via GitHub integration (`giovannilomonaco/the-tenerife-way`). Every push to `master` triggers an automatic redeploy. Live URL: `the-tenerife-way-eunn.vercel.app`.
+
+`gh` CLI is installed at `C:\Program Files\GitHub CLI\gh.exe` but is not in PATH — invoke with full path or use PowerShell with `& "C:\Program Files\GitHub CLI\gh.exe"`.
