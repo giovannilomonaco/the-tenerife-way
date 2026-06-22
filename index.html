@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Tenerife Way — Private Experiences</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand: #F5ECD7;
+      --ocean: #1A6B8A;
+      --forest: #2D5A27;
+      --dark: #1C1C1C;
+      --light: #FDFAF5;
+      --muted: #7A7060;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background: var(--light);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      transition: background 0.3s, opacity 0.6s ease, transform 0.6s ease;
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    nav.nav-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    nav.scrolled {
+      background: rgba(28, 28, 28, 0.92);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0d3d52 0%, #1A6B8A 40%, #2D5A27 100%);
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(45,90,39,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(26,107,138,0.5) 0%, transparent 50%);
+    }
+    /* Decorative volcanic silhouette */
+    .hero-silhouette {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to top, rgba(13,30,20,0.7) 0%, transparent 100%);
+      clip-path: polygon(0 100%, 0 60%, 15% 45%, 30% 55%, 45% 30%, 50% 5%, 55% 30%, 70% 50%, 85% 40%, 100% 55%, 100% 100%);
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,25,20,0.45);
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      padding: 0 1.5rem;
+      max-width: 800px;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.08;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: #a8d5b5;
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: var(--ocean);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: #145878; transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.3);
+      animation: scrollAnim 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollAnim {
+      0%, 100% { transform: scaleY(1); opacity: 0.3; }
+      50% { transform: scaleY(0.4); opacity: 0.7; }
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* HERO PARALLAX */
+    .hero-bg, .hero-silhouette {
+      will-change: transform;
+    }
+
+    /* CARD SHIMMER HOVER */
+    .exp-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 4px;
+      opacity: 0;
+      box-shadow: inset 0 0 0 1px rgba(168, 213, 181, 0.4);
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .exp-card:hover::after { opacity: 1; }
+
+    /* SECTIONS COMMON */
+    section { padding: 6rem 4rem; }
+    .section-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ocean);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 580px;
+    }
+    .container { max-width: 1160px; margin: 0 auto; }
+
+    /* INTRO */
+    .intro {
+      background: var(--light);
+    }
+    .intro-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .intro-visual {
+      position: relative;
+      height: 420px;
+    }
+    .intro-box {
+      position: absolute;
+      border-radius: 3px;
+    }
+    .intro-box-1 {
+      top: 0; left: 0;
+      width: 70%; height: 75%;
+      background: linear-gradient(135deg, var(--ocean), #0d3d52);
+    }
+    .intro-box-2 {
+      bottom: 0; right: 0;
+      width: 60%; height: 60%;
+      background: linear-gradient(135deg, var(--forest), #1a3d16);
+    }
+    .intro-badge {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--sand);
+      border-radius: 50%;
+      width: 110px; height: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 2;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+    .intro-badge span:first-child {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--dark);
+      line-height: 1;
+    }
+    .intro-badge span:last-child {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* EXPERIENCES */
+    .experiences { background: var(--dark); color: #fff; }
+    .experiences .section-eyebrow { color: #a8d5b5; }
+    .experiences .section-lead { color: rgba(255,255,255,0.6); }
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .exp-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 2rem 1.5rem;
+      transition: background 0.25s, transform 0.25s;
+      cursor: default;
+    }
+    .exp-card:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-5px);
+    }
+    .exp-icon {
+      width: 48px; height: 48px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .exp-icon svg { width: 100%; height: 100%; }
+    .exp-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #fff;
+    }
+    .exp-card p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+    }
+
+    /* HOW IT WORKS */
+    .how { background: var(--sand); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 3.5rem;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      color: rgba(26,107,138,0.2);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .step h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: 0.6rem;
+    }
+    .step p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* TESTIMONIALS */
+    .testimonials { background: var(--light); }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .test-card {
+      background: #fff;
+      border-radius: 4px;
+      padding: 2rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    }
+    .test-stars {
+      color: #c9a84c;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+    .test-card blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--dark);
+      margin-bottom: 1.2rem;
+    }
+    .test-author {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    /* CONTACT */
+    .contact { background: var(--ocean); color: #fff; }
+    .contact .section-eyebrow { color: #a8d5b5; }
+    .contact .section-title { color: #fff; }
+    .contact .section-lead { color: rgba(255,255,255,0.7); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .contact-item span:first-child {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .contact-item span:last-child {
+      font-size: 0.95rem;
+      color: #fff;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 2px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: rgba(255,255,255,0.5); }
+    .form-group select option { background: var(--ocean); color: #fff; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .btn-submit {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: #fff;
+      color: var(--ocean);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      align-self: flex-start;
+    }
+    .btn-submit:hover { background: var(--sand); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.45);
+      padding: 3rem 4rem;
+    }
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.8); }
+    .footer-copy { font-size: 0.78rem; }
+
+    /* RESPONSIVE */
+    /* BLOG */
+    .blog { background: var(--sand); }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .blog-card {
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .blog-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .blog-thumb {
+      height: 200px;
+      background: linear-gradient(135deg, var(--ocean), var(--forest));
+      position: relative;
+      overflow: hidden;
+    }
+    .blog-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .blog-thumb-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--ocean), var(--forest));
+    }
+    .blog-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .blog-date { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .blog-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ocean);
+      background: rgba(26,107,138,0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+    }
+    .blog-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.35;
+    }
+    .blog-card p {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .blog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .blog-instagram {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--ocean);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .blog-instagram:hover { color: var(--forest); }
+    .blog-instagram svg { width: 16px; height: 16px; }
+    .blog-read {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      .blog-grid { grid-template-columns: 1fr; }
+    }
+      section { padding: 4.5rem 2rem; }
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      .intro-inner { grid-template-columns: 1fr; }
+      .intro-visual { height: 280px; }
+      .exp-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; gap: 2rem; }
+      .test-grid { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 580px) {
+      .exp-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">The Tenerife Way</a>
+    <ul class="nav-links">
+      <li><a href="#experiences">Experiences</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#testimonials">Stories</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-silhouette"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal" style="--reveal-delay:200ms">Private Experiences · Tenerife, Canary Islands</p>
+      <h1 class="hero-title reveal" style="--reveal-delay:400ms">Experience Tenerife<br /><em>Like Never Before</em></h1>
+      <p class="hero-subtitle reveal" style="--reveal-delay:600ms">Private, tailor-made journeys through the island's most authentic landscapes, flavours, and stories — crafted exclusively for you.</p>
+      <a href="#contact" class="btn-primary reveal" style="--reveal-delay:800ms">Discover Your Journey</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="container intro-inner">
+      <div class="intro-text reveal-left">
+        <p class="section-eyebrow">Who We Are</p>
+        <h2 class="section-title">The island beyond the tourist trail</h2>
+        <p class="section-lead">
+          The Tenerife Way is a private experience company rooted in a deep love for this island. We curate intimate encounters with Tenerife's nature, cuisine, culture, and hidden corners — experiences you simply cannot find in a travel catalogue.
+        </p>
+        <br />
+        <p class="section-lead" style="font-size:0.92rem;">
+          Every journey is designed around you: your pace, your interests, your sense of wonder. Our local guides bring a lifetime of knowledge, ensuring each experience feels genuine, personal, and unforgettable.
+        </p>
+      </div>
+      <div class="intro-visual reveal-right">
+        <div class="intro-box intro-box-1"></div>
+        <div class="intro-box intro-box-2"></div>
+        <div class="intro-badge">
+          <span>100%</span>
+          <span>Private &amp; Bespoke</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCES -->
+  <section class="experiences" id="experiences">
+    <div class="container">
+      <p class="section-eyebrow reveal">What We Offer</p>
+      <h2 class="section-title reveal" style="color:#fff;--reveal-delay:100ms">Four ways to fall in love<br />with the island</h2>
+      <p class="section-lead reveal" style="--reveal-delay:200ms">From volcanic summits to ancient forests, from sun-drenched vineyards to living culture — every corner of Tenerife holds a story worth experiencing in private.</p>
+      <div class="exp-grid">
+
+        <div class="exp-card">
+          <div class="exp-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4L44 40H4L24 4Z" stroke="#a8d5b5" stroke-width="2" fill="none"/>
+              <circle cx="24" cy="18" r="3" fill="#a8d5b5"/>
+              <path d="M14 40 Q14 30 24 28 Q34 30 34 40" stroke="#a8d5b5" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <h3>Nature &amp; Volcano</h3>
+          <p>Private sunrise hikes on Mount Teide, guided walks through the Anaga rainforest, and stargazing sessions under one of the world's clearest skies.</p>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 32 Q12 16 24 16 Q36 16 40 32" stroke="#c9a84c" stroke-width="2" fill="none"/>
+              <ellipse cx="24" cy="32" rx="16" ry="5" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+              <path d="M18 16 Q20 8 24 8 Q28 8 30 16" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <h3>Food &amp; Wine</h3>
+          <p>Exclusive dinners in volcanic vineyards, private tastings of Canarian wines and artisan cheeses, and hands-on cooking sessions with local chefs.</p>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="20" width="32" height="22" rx="2" stroke="#d4a5f5" stroke-width="2" fill="none"/>
+              <path d="M16 20V14 Q16 8 24 8 Q32 8 32 14V20" stroke="#d4a5f5" stroke-width="2" fill="none"/>
+              <circle cx="24" cy="31" r="3" fill="#d4a5f5"/>
+            </svg>
+          </div>
+          <h3>Guanche Culture</h3>
+          <p>Private visits to archaeological sites, storytelling sessions with cultural experts, and encounters with craftspeople keeping ancient traditions alive.</p>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="18" width="36" height="24" rx="2" stroke="#87ceeb" stroke-width="2" fill="none"/>
+              <path d="M14 18V14 Q14 8 24 8 Q34 8 34 14V18" stroke="#87ceeb" stroke-width="2" fill="none"/>
+              <path d="M18 32 H30 M24 28 V36" stroke="#87ceeb" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h3>Exclusive Stays</h3>
+          <p>Carefully selected rural houses, boutique fincas, and cliff-side retreats — handpicked for their authenticity, privacy, and connection to the landscape.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="container">
+      <p class="section-eyebrow reveal">The Process</p>
+      <h2 class="section-title reveal" style="--reveal-delay:100ms">Three steps to your<br />perfect Tenerife story</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Tell Us Your Dream</h3>
+          <p>Share your interests, travel dates, and what kind of experience you're looking for. We listen carefully — there are no standard packages here.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>We Craft Your Journey</h3>
+          <p>Our local team designs a bespoke itinerary around you — selecting the right guides, locations, and moments to make your experience unique and seamless.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Live the Experience</h3>
+          <p>Arrive and let Tenerife surprise you. Every detail is taken care of so you can be fully present and enjoy every moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <p class="section-eyebrow reveal">Stories</p>
+      <h2 class="section-title reveal" style="--reveal-delay:100ms">What our guests say</h2>
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <blockquote>"The private sunrise hike to Teide was the most magical morning of my life. Our guide knew the mountain like an old friend — we saw the shadow of the volcano stretching across the clouds below us."</blockquote>
+          <p class="test-author">— Sarah M., London</p>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <blockquote>"A dinner in a vineyard at sunset, wine flowing, the ocean in the distance. The Tenerife Way understood exactly what we were looking for and delivered something beyond our imagination."</blockquote>
+          <p class="test-author">— Marco &amp; Elena, Milan</p>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <blockquote>"I've visited Tenerife three times before but never truly knew it. The private cultural tour with a Guanche history expert was eye-opening. This island has so many layers — I'll be back."</blockquote>
+          <p class="test-author">— Thomas K., Berlin</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section class="blog" id="blog">
+    <div class="container">
+      <p class="section-eyebrow reveal">From the Island</p>
+      <h2 class="section-title reveal" style="--reveal-delay:100ms">Stories &amp; Inspirations</h2>
+      <p class="section-lead reveal" style="--reveal-delay:200ms">Guides, tales and glimpses of Tenerife — straight from our world to yours.</p>
+      <div class="blog-grid" id="blog-grid"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <p class="section-eyebrow reveal">Get In Touch</p>
+      <h2 class="section-title reveal" style="--reveal-delay:100ms">Start your journey</h2>
+      <div class="contact-inner">
+        <div>
+          <p class="section-lead">Every great experience begins with a conversation. Tell us what you're dreaming of — we'll take care of the rest.</p>
+          <br /><br />
+          <div class="contact-info">
+            <div class="contact-item">
+              <span>Email</span>
+              <span>hello@thetenerifeway.com</span>
+            </div>
+            <div class="contact-item">
+              <span>Phone / WhatsApp</span>
+              <span>+34 600 000 000</span>
+            </div>
+            <div class="contact-item">
+              <span>Based in</span>
+              <span>Tenerife, Canary Islands, Spain</span>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="your@email.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="experience">Type of Experience</label>
+            <select id="experience">
+              <option value="">Select an experience...</option>
+              <option>Nature &amp; Volcano</option>
+              <option>Food &amp; Wine</option>
+              <option>Guanche Culture</option>
+              <option>Exclusive Stays</option>
+              <option>Mixed / Bespoke Journey</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Tell Us Your Dream</label>
+            <textarea id="message" placeholder="Describe the experience you're looking for — dates, group size, interests..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Your Request</button>
+          <p id="form-success" style="display:none; color:#a8d5b5; font-size:0.88rem; margin-top:0.5rem;">
+            Thank you! We'll be in touch within 24 hours.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-logo">The Tenerife Way</span>
+      <ul class="footer-links">
+        <li><a href="#experiences">Experiences</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#testimonials">Stories</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <span class="footer-copy">© 2026 The Tenerife Way. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    // 1. NAVBAR — fade in from top on load
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('load', () => {
+      setTimeout(() => navbar.classList.add('nav-visible'), 100);
+    });
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // 2. HERO PARALLAX
+    const heroBg = document.querySelector('.hero-bg');
+    const heroSil = document.querySelector('.hero-silhouette');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroBg.style.transform  = `translateY(${y * 0.25}px)`;
+        heroSil.style.transform = `translateY(${y * 0.12}px)`;
+      }
+    }, { passive: true });
+
+    // 3. SCROLL REVEAL — sections + staggered cards
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Staggered cards
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    function observeCards(selector) {
+      document.querySelectorAll(selector).forEach((el, i) => {
+        el.classList.add('reveal');
+        el.style.setProperty('--reveal-delay', `${i * 120}ms`);
+        cardObserver.observe(el);
+      });
+    }
+    observeCards('.exp-card');
+    observeCards('.step');
+    observeCards('.test-card');
+
+    // Hero elements — trigger immediately since they're above the fold
+    document.querySelectorAll('.hero-content .reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // 4. COUNTER — badge "100%" counts up on enter
+    const badge = document.querySelector('.intro-badge span:first-child');
+    if (badge) {
+      let counted = false;
+      const counterObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !counted) {
+          counted = true;
+          let n = 0;
+          const target = 100;
+          const step = Math.ceil(target / 40);
+          const interval = setInterval(() => {
+            n = Math.min(n + step, target);
+            badge.textContent = n + '%';
+            if (n >= target) clearInterval(interval);
+          }, 30);
+        }
+      }, { threshold: 0.5 });
+      counterObserver.observe(badge.closest('.intro-badge'));
+    }
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+      setTimeout(() => {
+        document.getElementById('form-success').style.display = 'none';
+      }, 5000);
+    }
+
+    // Blog
+    const DEFAULT_ARTICLES = [
+      {
+        id: 1,
+        title: "Sunrise on Teide: A Private Morning Above the Clouds",
+        excerpt: "We left the village at 3am, headlamps cutting through the dark pine forest. By dawn, we were standing above a sea of clouds with the shadow of the volcano stretching to the horizon.",
+        tag: "Nature",
+        date: "2026-05-18",
+        emoji: "🌋",
+        instagram: "https://www.instagram.com/"
+      },
+      {
+        id: 2,
+        title: "The Lost Vineyards of La Orotava Valley",
+        excerpt: "Hidden between ancient stone walls, the pre-phylloxera vines of Tenerife produce wines unlike anything else in the world. We sat with the winemaker as the sun set over the Atlantic.",
+        tag: "Food & Wine",
+        date: "2026-04-30",
+        emoji: "🍷",
+        instagram: "https://www.instagram.com/"
+      },
+      {
+        id: 3,
+        title: "Guanche Voices: Meeting the Keeper of Ancient Stories",
+        excerpt: "Juan Carlos grew up near the Roque Cinchado and learned the island's history from his grandmother. Spending an afternoon with him felt like opening a door to a world few visitors ever find.",
+        tag: "Culture",
+        date: "2026-04-12",
+        emoji: "🗿",
+        instagram: "https://www.instagram.com/"
+      }
+    ];
+
+    function formatDate(str) {
+      const d = new Date(str);
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function renderBlog() {
+      const stored = localStorage.getItem('ttw_articles');
+      const articles = stored ? JSON.parse(stored) : DEFAULT_ARTICLES;
+      const grid = document.getElementById('blog-grid');
+      if (!grid) return;
+      grid.innerHTML = articles.map(a => `
+        <div class="blog-card">
+          <div class="blog-thumb">
+            ${a.image
+              ? `<img src="${a.image}" alt="${a.title}" />`
+              : `<div class="blog-thumb-placeholder">${a.emoji || '🌴'}</div>`}
+          </div>
+          <div class="blog-body">
+            <div class="blog-meta">
+              <span class="blog-date">${formatDate(a.date)}</span>
+              <span class="blog-tag">${a.tag}</span>
+            </div>
+            <h3>${a.title}</h3>
+            <p>${a.excerpt}</p>
+            <div class="blog-footer">
+              <a class="blog-instagram" href="${a.instagram}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                </svg>
+                View on Instagram
+              </a>
+              <span class="blog-read">Read more →</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // animate blog cards with stagger
+      grid.querySelectorAll('.blog-card').forEach((el, i) => {
+        el.classList.add('reveal');
+        el.style.setProperty('--reveal-delay', `${i * 120}ms`);
+        cardObserver.observe(el);
+      });
+    }
+
+    renderBlog();
+  </script>
+
+</body>
+</html>

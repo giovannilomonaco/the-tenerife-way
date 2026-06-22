@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — The Tenerife Way</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1A6B8A;
+      --forest: #2D5A27;
+      --sand: #F5ECD7;
+      --dark: #1C1C1C;
+      --light: #F7F5F0;
+      --muted: #7A7060;
+      --border: #E2DDD6;
+      --danger: #c0392b;
+      --success: #27ae60;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--dark); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0d3d52, var(--ocean), var(--forest));
+    }
+    .login-box {
+      background: #fff;
+      border-radius: 6px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .login-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--ocean);
+      margin-bottom: 0.4rem;
+    }
+    .login-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .login-box label { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .login-box input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1.2rem;
+    }
+    .login-box input[type="password"]:focus { border-color: var(--ocean); }
+    .btn { display: inline-block; padding: 0.75rem 1.5rem; border: none; border-radius: 3px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.2s, transform 0.15s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--ocean); color: #fff; width: 100%; }
+    .btn-primary:hover { background: #145878; }
+    .btn-success { background: var(--forest); color: #fff; }
+    .btn-success:hover { background: #1e3f1b; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #a93226; }
+    .btn-secondary { background: var(--border); color: var(--dark); }
+    .btn-secondary:hover { background: #d0c9bf; }
+    .login-error { font-size: 0.82rem; color: var(--danger); margin-top: 0.5rem; display: none; }
+
+    /* LAYOUT */
+    #admin-screen { display: none; min-height: 100vh; }
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+    .header-logo span { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.4); letter-spacing: 0.15em; text-transform: uppercase; margin-left: 0.75rem; }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .header-actions a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+    .header-actions a:hover { color: #fff; }
+    .logout-btn { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 0.4rem 1rem; border-radius: 3px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; }
+    .logout-btn:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    .admin-body { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100vh - 58px); }
+
+    /* SIDEBAR */
+    .sidebar { background: #fff; border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .sidebar-title { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .article-list { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; overflow-y: auto; }
+    .article-item {
+      padding: 0.75rem 1rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .article-item:hover { background: var(--light); }
+    .article-item.active { background: rgba(26,107,138,0.08); border-color: rgba(26,107,138,0.2); }
+    .article-item-title { font-size: 0.88rem; font-weight: 500; line-height: 1.3; margin-bottom: 0.25rem; }
+    .article-item-meta { font-size: 0.72rem; color: var(--muted); display: flex; gap: 0.5rem; }
+    .article-item-tag { background: rgba(26,107,138,0.1); color: var(--ocean); padding: 0.1rem 0.35rem; border-radius: 2px; }
+    .new-btn { width: 100%; margin-top: auto; }
+
+    /* EDITOR */
+    .editor-pane { padding: 2rem; overflow-y: auto; }
+    .editor-pane h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.7rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+      color: var(--dark);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--ocean); }
+    .form-group textarea { resize: vertical; min-height: 140px; }
+    .editor-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; align-items: center; }
+    .save-msg { font-size: 0.82rem; color: var(--success); display: none; }
+
+    /* PREVIEW */
+    .preview-divider { margin: 2.5rem 0 1.5rem; border: none; border-top: 1px solid var(--border); }
+    .preview-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .preview-card {
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+      max-width: 360px;
+    }
+    .preview-thumb {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--ocean), var(--forest));
+    }
+    .preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .preview-body { padding: 1.2rem; }
+    .preview-meta { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .preview-date { font-size: 0.7rem; color: var(--muted); }
+    .preview-tag-badge { font-size: 0.65rem; color: var(--ocean); background: rgba(26,107,138,0.1); padding: 0.15rem 0.4rem; border-radius: 2px; }
+    .preview-title { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.3; }
+    .preview-excerpt { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .preview-ig { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--ocean); margin-top: 0.75rem; text-decoration: none; }
+    .preview-ig svg { width: 14px; height: 14px; }
+
+    .empty-state { color: var(--muted); font-size: 0.9rem; padding: 3rem 0; text-align: center; }
+
+    @media (max-width: 768px) {
+      .admin-body { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">The Tenerife Way</div>
+    <div class="login-sub">Admin Panel</div>
+    <label for="pwd">Password</label>
+    <input type="password" id="pwd" placeholder="Enter password" onkeydown="if(event.key==='Enter') login()" />
+    <button class="btn btn-primary" onclick="login()">Sign In</button>
+    <p class="login-error" id="login-error">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <header>
+    <div>
+      <span class="header-logo">The Tenerife Way <span>Admin</span></span>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" target="_blank">← View Site</a>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <p class="sidebar-title">Articles</p>
+      <div class="article-list" id="article-list"></div>
+      <button class="btn btn-primary new-btn" onclick="newArticle()">+ New Article</button>
+    </aside>
+
+    <!-- EDITOR -->
+    <main class="editor-pane" id="editor-pane">
+      <div class="empty-state">Select an article to edit, or create a new one.</div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = 'tenerife2026';
+  const STORAGE_KEY = 'ttw_articles';
+
+  const DEFAULT_ARTICLES = [
+    {
+      id: 1,
+      title: "Sunrise on Teide: A Private Morning Above the Clouds",
+      excerpt: "We left the village at 3am, headlamps cutting through the dark pine forest. By dawn, we were standing above a sea of clouds with the shadow of the volcano stretching to the horizon.",
+      tag: "Nature",
+      date: "2026-05-18",
+      emoji: "🌋",
+      image: "",
+      instagram: "https://www.instagram.com/"
+    },
+    {
+      id: 2,
+      title: "The Lost Vineyards of La Orotava Valley",
+      excerpt: "Hidden between ancient stone walls, the pre-phylloxera vines of Tenerife produce wines unlike anything else in the world. We sat with the winemaker as the sun set over the Atlantic.",
+      tag: "Food & Wine",
+      date: "2026-04-30",
+      emoji: "🍷",
+      image: "",
+      instagram: "https://www.instagram.com/"
+    },
+    {
+      id: 3,
+      title: "Guanche Voices: Meeting the Keeper of Ancient Stories",
+      excerpt: "Juan Carlos grew up near the Roque Cinchado and learned the island's history from his grandmother. Spending an afternoon with him felt like opening a door to a world few visitors ever find.",
+      tag: "Culture",
+      date: "2026-04-12",
+      emoji: "🗿",
+      image: "",
+      instagram: "https://www.instagram.com/"
+    }
+  ];
+
+  let articles = [];
+  let currentId = null;
+
+  function getArticles() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : JSON.parse(JSON.stringify(DEFAULT_ARTICLES));
+  }
+
+  function saveArticles() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
+  }
+
+  function login() {
+    const val = document.getElementById('pwd').value;
+    if (val === PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      init();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('pwd').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  function init() {
+    articles = getArticles();
+    renderSidebar();
+  }
+
+  function renderSidebar() {
+    const list = document.getElementById('article-list');
+    if (articles.length === 0) {
+      list.innerHTML = '<p style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0;">No articles yet.</p>';
+      return;
+    }
+    list.innerHTML = articles.map(a => `
+      <div class="article-item ${a.id === currentId ? 'active' : ''}" onclick="editArticle(${a.id})">
+        <div class="article-item-title">${a.title}</div>
+        <div class="article-item-meta">
+          <span>${a.date}</span>
+          <span class="article-item-tag">${a.tag}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function formatPreviewDate(str) {
+    if (!str) return '';
+    const d = new Date(str);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function renderEditor(article) {
+    const pane = document.getElementById('editor-pane');
+    const isNew = !article.id;
+    pane.innerHTML = `
+      <h2>${isNew ? 'New Article' : 'Edit Article'}</h2>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Title</label>
+          <input type="text" id="f-title" value="${escHtml(article.title || '')}" oninput="updatePreview()" placeholder="Article title..." />
+        </div>
+        <div class="form-group full">
+          <label>Excerpt</label>
+          <textarea id="f-excerpt" oninput="updatePreview()" placeholder="Short description shown on the blog card...">${escHtml(article.excerpt || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="f-tag" onchange="updatePreview()">
+            ${['Nature','Food & Wine','Culture','Stays','Travel'].map(t =>
+              `<option ${article.tag === t ? 'selected' : ''}>${t}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="f-date" value="${article.date || ''}" oninput="updatePreview()" />
+        </div>
+        <div class="form-group full">
+          <label>Image URL <span style="font-size:0.65rem;color:var(--muted);text-transform:none;">(leave empty to use emoji)</span></label>
+          <input type="url" id="f-image" value="${escHtml(article.image || '')}" oninput="updatePreview()" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>Emoji (fallback)</label>
+          <input type="text" id="f-emoji" value="${article.emoji || '🌴'}" oninput="updatePreview()" placeholder="🌴" maxlength="4" />
+        </div>
+        <div class="form-group">
+          <label>Instagram Post URL</label>
+          <input type="url" id="f-instagram" value="${escHtml(article.instagram || '')}" placeholder="https://www.instagram.com/p/..." />
+        </div>
+      </div>
+      <div class="editor-actions">
+        <button class="btn btn-success" onclick="saveArticle(${article.id || 'null'})">Save Article</button>
+        ${article.id ? `<button class="btn btn-danger" onclick="deleteArticle(${article.id})">Delete</button>` : ''}
+        <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+        <span class="save-msg" id="save-msg">✓ Saved</span>
+      </div>
+      <hr class="preview-divider" />
+      <p class="preview-label">Card Preview</p>
+      <div class="preview-card" id="preview-card"></div>
+    `;
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const title = document.getElementById('f-title')?.value || '';
+    const excerpt = document.getElementById('f-excerpt')?.value || '';
+    const tag = document.getElementById('f-tag')?.value || '';
+    const date = document.getElementById('f-date')?.value || '';
+    const image = document.getElementById('f-image')?.value || '';
+    const emoji = document.getElementById('f-emoji')?.value || '🌴';
+    const instagram = document.getElementById('f-instagram')?.value || '#';
+    const card = document.getElementById('preview-card');
+    if (!card) return;
+    card.innerHTML = `
+      <div class="preview-thumb">
+        ${image ? `<img src="${image}" alt="" />` : emoji}
+      </div>
+      <div class="preview-body">
+        <div class="preview-meta">
+          <span class="preview-date">${formatPreviewDate(date)}</span>
+          <span class="preview-tag-badge">${tag}</span>
+        </div>
+        <div class="preview-title">${title || '<em style="color:var(--muted)">Title...</em>'}</div>
+        <div class="preview-excerpt">${excerpt || '<em style="color:var(--muted)">Excerpt...</em>'}</div>
+        <a class="preview-ig" href="${instagram}" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          View on Instagram
+        </a>
+      </div>
+    `;
+  }
+
+  function editArticle(id) {
+    currentId = id;
+    const article = articles.find(a => a.id === id);
+    renderSidebar();
+    renderEditor(article);
+  }
+
+  function newArticle() {
+    currentId = null;
+    renderSidebar();
+    renderEditor({ title: '', excerpt: '', tag: 'Nature', date: new Date().toISOString().slice(0,10), emoji: '🌴', image: '', instagram: '' });
+  }
+
+  function saveArticle(id) {
+    const data = {
+      title: document.getElementById('f-title').value.trim(),
+      excerpt: document.getElementById('f-excerpt').value.trim(),
+      tag: document.getElementById('f-tag').value,
+      date: document.getElementById('f-date').value,
+      image: document.getElementById('f-image').value.trim(),
+      emoji: document.getElementById('f-emoji').value.trim() || '🌴',
+      instagram: document.getElementById('f-instagram').value.trim()
+    };
+    if (!data.title) { alert('Please enter a title.'); return; }
+    if (id) {
+      const idx = articles.findIndex(a => a.id === id);
+      articles[idx] = { ...articles[idx], ...data };
+    } else {
+      const newId = Date.now();
+      articles.unshift({ id: newId, ...data });
+      currentId = newId;
+    }
+    saveArticles();
+    renderSidebar();
+    const msg = document.getElementById('save-msg');
+    if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2500); }
+  }
+
+  function deleteArticle(id) {
+    if (!confirm('Delete this article? This cannot be undone.')) return;
+    articles = articles.filter(a => a.id !== id);
+    currentId = null;
+    saveArticles();
+    renderSidebar();
+    document.getElementById('editor-pane').innerHTML = '<div class="empty-state">Article deleted. Select another or create a new one.</div>';
+  }
+
+  function cancelEdit() {
+    currentId = null;
+    renderSidebar();
+    document.getElementById('editor-pane').innerHTML = '<div class="empty-state">Select an article to edit, or create a new one.</div>';
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Auto-login if session active
+  if (sessionStorage.getItem('ttw_admin')) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    init();
+  }
+
+  // Persist session
+  const _login = login;
+  window.login = function() {
+    _login();
+    if (document.getElementById('admin-screen').style.display === 'block') {
+      sessionStorage.setItem('ttw_admin', '1');
+    }
+  };
+  window.logout = function() {
+    sessionStorage.removeItem('ttw_admin');
+    logout();
+  };
+</script>
+</body>
+</html>
